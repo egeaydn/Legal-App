@@ -4,8 +4,17 @@ import { TextInput, Card, Text, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { fetchMaddeler } from '../../api/firebase';
 
+export interface Madde {
+  id: string;
+  mevzuat_id?: string;
+  madde_no: string;
+  baslik: string;
+  icerik: string;
+  kategori: string;
+}
+
 export default function HomeScreen() {
-  const [maddeler, setMaddeler] = useState([]);
+  const [maddeler, setMaddeler] = useState<Madde[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const theme = useTheme();
   const router = useRouter();
@@ -19,7 +28,7 @@ export default function HomeScreen() {
     setMaddeler(data);
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: Madde }) => (
     <Card 
       style={styles.card} 
       onPress={() => router.push({ pathname: '/article/[id]', params: { id: item.id, item: JSON.stringify(item) } })}
