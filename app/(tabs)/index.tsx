@@ -87,7 +87,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#E8EDF2', // Hafif grimsi/mavi arka plan
+    backgroundColor: '#E8EDF2', 
   },
   backgroundWatermarkContainer: {
     position: 'absolute',
@@ -139,8 +139,8 @@ const styles = StyleSheet.create({
   },
   cardLogo: {
     position: 'absolute',
-    width: 65,
-    height: 65,
+    width: 85,
+    height: 85,
     opacity: 0.6,
   },
   cardTitle: { 
