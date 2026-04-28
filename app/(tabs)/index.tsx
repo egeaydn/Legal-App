@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet, Image, Pressable, Dimensions, Platform, ActivityIndicator } from 'react-native';
-import { TextInput, Text, Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Dimensions, FlatList, Image, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Button, Text, TextInput } from 'react-native-paper';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-import { fetchKanunKitapciklari, uploadInitialData } from '../../api/firebase';
+import { fetchKanunKitapciklari } from '../../api/firebase';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width / 2 - 24;
@@ -13,7 +13,7 @@ export default function HomeScreen() {
   const [kitapciklar, setKitapciklar] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  
+
   const router = useRouter();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function HomeScreen() {
     }
   };
 
-  const filteredData = kitapciklar.filter(item => 
+  const filteredData = kitapciklar.filter(item =>
     item.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.Abbreviation?.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -41,24 +41,26 @@ export default function HomeScreen() {
   const renderKanunCard = ({ item, index }: { item: any, index: number }) => {
     return (
       <Animated.View entering={FadeInUp.delay(index * 70).springify()}>
-        <Pressable 
+        <Pressable
           style={({ pressed }) => [
             styles.card,
             pressed && styles.cardPressed
-          ]} 
-          onPress={() => router.push({ 
-            pathname: '/article/[id]', 
-            params: { id: item.id, item: JSON.stringify({
-              id: item.id,
-              madde_no: item.Abbreviation || "1",
-              baslik: item.Name,
-              icerik: "Bu kitapçığın ('" + item.Name + "') içeriği ve tüm alt maddeleri çok yakında bir API arayüzünden otomatik çekilerek okumaya hazır hale getirilecektir.",
-              kategori: item.Abbreviation
-            })} 
+          ]}
+          onPress={() => router.push({
+            pathname: '/article/[id]',
+            params: {
+              id: item.id, item: JSON.stringify({
+                id: item.id,
+                madde_no: item.Abbreviation || "1",
+                baslik: item.Name,
+                icerik: "Bu kitapçığın ('" + item.Name + "') içeriği ve tüm alt maddeleri çok yakında bir API arayüzünden otomatik çekilerek okumaya hazır hale getirilecektir.",
+                kategori: item.Abbreviation
+              })
+            }
           })}
         >
-          <Image 
-            source={require('../../assets/images/tc-adalet-bakanligi-vector-logo.png')} 
+          <Image
+            source={require('../../assets/images/tc-adalet-bakanligi-vector-logo.png')}
             style={styles.cardLogo}
             resizeMode="contain"
           />
@@ -75,7 +77,7 @@ export default function HomeScreen() {
         <Text style={styles.backgroundWatermarkText}>91</Text>
       </View>
 
-      <Animated.View entering={FadeInUp.delay(150).duration(500)} style={styles.searchContainer}>
+      <Animated.View entering={FadeInDown.delay(150).duration(500)} style={styles.searchContainer}>
         <TextInput
           mode="outlined"
           placeholder="Ara.."
@@ -87,7 +89,7 @@ export default function HomeScreen() {
           theme={{ roundness: 25, colors: { primary: '#9e9e9e' } }}
         />
       </Animated.View>
-      
+
       {loading ? (
         <View style={styles.centerContainer}>
           <ActivityIndicator size="large" color="#9d0000" />
@@ -128,7 +130,7 @@ const styles = StyleSheet.create({
   errorText: { fontSize: 20, fontWeight: 'bold', color: '#ff3333', marginBottom: 8 },
   errorSubText: { fontSize: 14, color: '#555', textAlign: 'center' },
   errorButton: { borderColor: '#9d0000' },
-  
+
   backgroundWatermarkContainer: {
     position: 'absolute', top: 0, bottom: 0, left: 0, right: 0,
     justifyContent: 'center', alignItems: 'center', zIndex: 0,
@@ -143,8 +145,8 @@ const styles = StyleSheet.create({
   searchOutline: { borderColor: '#cccccc', borderWidth: 1 },
   listContent: { paddingHorizontal: 16, paddingBottom: 100, zIndex: 1 },
   row: { justifyContent: 'space-between', marginBottom: 20 },
-  
-  card: { 
+
+  card: {
     backgroundColor: '#FAF9F6',
     width: CARD_WIDTH,
     height: 140,
@@ -162,9 +164,9 @@ const styles = StyleSheet.create({
   },
   cardPressed: { transform: [{ scale: 0.96 }], backgroundColor: '#f0efe9' },
   cardLogo: { position: 'absolute', width: 90, height: 90, opacity: 0.15 },
-  cardTitle: { 
-    fontSize: 14, 
-    fontWeight: '600', 
+  cardTitle: {
+    fontSize: 14,
+    fontWeight: '600',
     textAlign: 'center',
     color: '#333333',
     lineHeight: 20,
