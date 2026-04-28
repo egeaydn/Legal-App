@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, FlatList } from 'react-native';
-import { Text, useTheme, Card, IconButton, Divider } from 'react-native-paper';
+import { View, StyleSheet, FlatList, Pressable, Platform } from 'react-native';
+import { Text, IconButton } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Madde } from './index';
+import Animated, { FadeInDown, FadeInUp, Layout, ZoomIn } from 'react-native-reanimated';
+
+export interface Madde {
+  id: string;
+  madde_no: string;
+  baslik: string;
+  icerik: string;
+  kategori?: string;
+  mevzuat_id?: string;
+}
 
 export default function LibraryScreen() {
-  const theme = useTheme();
   const router = useRouter();
-  
   const [favorites, setFavorites] = useState<Madde[]>([]);
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
-  // useFocusEffect ensures data is re-fetched every time user opens the tab
   useFocusEffect(
     React.useCallback(() => {
       loadLibraryData();
@@ -30,7 +36,7 @@ export default function LibraryScreen() {
       if (favsStr) setFavorites(JSON.parse(favsStr));
       if (notesStr) setNotes(JSON.parse(notesStr));
     } catch (error) {
-      console.error("Kütüphane yüklenemedi", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -39,77 +45,83 @@ export default function LibraryScreen() {
   const removeFavorite = async (id: string) => {
     try {
       const newFavs = favorites.filter(f => f.id !== id);
-      setFavorites(newFavs);
+      setFavorites(newFavs); // Optimistic UI update (Hemen silindi hissi verir)
       await AsyncStorage.setItem('favorites', JSON.stringify(newFavs));
     } catch (error) {
       console.error(error);
     }
   };
 
-  const renderItem = ({ item }: { item: Madde }) => {
+  const renderItem = ({ item, index }: { item: Madde, index: number }) => {
     const hasNote = notes[item.id] && notes[item.id].trim() !== '';
 
     return (
-      <Card 
-        style={styles.card}
-        onPress={() => router.push({ pathname: '/article/[id]', params: { id: item.id, item: JSON.stringify(item) } })}
+      <Animated.View 
+        entering={FadeInUp.delay(index * 80).springify().damping(14)} 
+        layout={Layout.springify()} // Listeden bir şey silinince diğerleri kayarak yerleşir
+        style={{ marginBottom: 16 }}
       >
-        <Card.Title 
-          title={`${item.kategori} - Madde ${item.madde_no}`}
-          subtitle={item.baslik}
-          right={(props) => (
+        <Pressable 
+          style={({ pressed }) => [
+            styles.card,
+            pressed && styles.cardPressed
+          ]}
+          onPress={() => router.push({ pathname: '/article/[id]', params: { id: item.id, item: JSON.stringify(item) } })}
+        >
+          <View style={styles.cardHeader}>
+            <View style={styles.cardHeaderLeft}>
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{item.kategori || "KANUN"}</Text>
+              </View>
+              <Text style={styles.maddeNo}>Madde {item.madde_no}</Text>
+            </View>
             <IconButton 
-              {...props} 
               icon="bookmark-remove" 
-              iconColor={theme.colors.error}
+              iconColor="#ff4444"
+              size={22}
+              style={{ margin: 0 }}
               onPress={() => removeFavorite(item.id)} 
             />
+          </View>
+          
+          <Text style={styles.cardTitle} numberOfLines={2}>{item.baslik}</Text>
+          
+          {hasNote && (
+            <View style={styles.noteContainer}>
+              <View style={styles.noteIndicator} />
+              <Text style={styles.noteText} numberOfLines={2}>
+                <MaterialCommunityIcons name="notebook-edit" size={14} color="#005b9f" /> {notes[item.id]}
+              </Text>
+            </View>
           )}
-        />
-        {hasNote && (
-          <>
-            <Divider />
-            <Card.Content style={styles.noteContent}>
-              <Text variant="labelMedium" style={{ color: theme.colors.primary, marginBottom: 4 }}>
-                <MaterialCommunityIcons name="notebook-edit" size={14} /> Benim Notum:
-              </Text>
-              <Text variant="bodySmall" numberOfLines={2} style={{ fontStyle: 'italic', opacity: 0.8 }}>
-                {notes[item.id]}
-              </Text>
-            </Card.Content>
-          </>
-        )}
-      </Card>
+        </Pressable>
+      </Animated.View>
     );
   };
 
   if (loading) {
-    return <View style={[styles.container, { backgroundColor: theme.colors.background }]} />
+    return <View style={styles.container} />;
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={styles.container}>
+      <Animated.Text entering={FadeInDown.duration(400).delay(100)} style={styles.pageTitle}>
+        Kaydettiklerim ({favorites.length})
+      </Animated.Text>
+      
       {favorites.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <MaterialCommunityIcons name="bookshelf" size={64} color={theme.colors.onSurfaceDisabled} />
-          <Text variant="titleMedium" style={{ marginTop: 16, color: theme.colors.onSurfaceDisabled }}>
-            Kütüphaneniz bomboş.
-          </Text>
-          <Text variant="bodyMedium" style={{ marginTop: 8, textAlign: 'center', opacity: 0.6 }}>
-            Maddeleri okurken yer imi butonuna basarak buraya ekleyebilirsiniz.
-          </Text>
-        </View>
+        <Animated.View entering={ZoomIn.duration(600).springify()} style={styles.emptyContainer}>
+          <MaterialCommunityIcons name="bookshelf" size={90} color="#c0c8d1" />
+          <Text style={styles.emptyTitle}>Kütüphaneniz bomboş</Text>
+          <Text style={styles.emptySub}>Maddeleri okurken yer imi butonuna basarak buraya ekleyebilirsiniz.</Text>
+        </Animated.View>
       ) : (
         <FlatList
           data={favorites}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: 20 }}
-          ListHeaderComponent={
-            <Text variant="titleLarge" style={[styles.header, { color: theme.colors.onSurface }]}>
-              Kaydettiklerim ({favorites.length})
-            </Text>
-          }
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
         />
       )}
     </View>
@@ -119,25 +131,116 @@ export default function LibraryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    backgroundColor: '#E8EDF2',
   },
-  header: {
-    marginBottom: 16,
-    fontWeight: 'bold'
+  pageTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#1a1a1a',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 15,
+    fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }),
+  },
+  listContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 120,
   },
   card: {
-    marginBottom: 16,
-    elevation: 2,
+    backgroundColor: '#FAF9F6',
+    borderRadius: 18,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.03)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.08,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
-  noteContent: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: 'rgba(0,0,0,0.02)'
+  cardPressed: {
+    transform: [{ scale: 0.97 }],
+    backgroundColor: '#f0efe9',
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  cardHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  badge: {
+    backgroundColor: '#9d0000',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    marginRight: 8,
+  },
+  badgeText: {
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+  maddeNo: {
+    fontSize: 14,
+    color: '#555',
+    fontWeight: '600',
+  },
+  cardTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#2c3e50',
+    marginBottom: 4,
+    fontFamily: Platform.select({ ios: 'Georgia', android: 'serif' }),
+    lineHeight: 24,
+  },
+  noteContainer: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.05)',
+    flexDirection: 'row',
+  },
+  noteIndicator: {
+    width: 3,
+    backgroundColor: '#005b9f',
+    borderRadius: 3,
+    marginRight: 8,
+  },
+  noteText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#555',
+    fontStyle: 'italic',
+    lineHeight: 20,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20
+    padding: 30,
+    marginTop: -80,
+  },
+  emptyTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#8a95a5',
+    marginTop: 20,
+  },
+  emptySub: {
+    fontSize: 15,
+    color: '#a0abb8',
+    textAlign: 'center',
+    marginTop: 10,
+    lineHeight: 22,
   }
 });

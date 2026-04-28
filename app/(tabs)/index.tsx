@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, Image, Pressable, Dimensions, Platform, ActivityIndicator } from 'react-native';
 import { TextInput, Text, Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { fetchKanunKitapciklari, uploadInitialData } from '../../api/firebase';
 
 const { width } = Dimensions.get('window');
@@ -75,7 +75,7 @@ export default function HomeScreen() {
         <Text style={styles.backgroundWatermarkText}>91</Text>
       </View>
 
-      <View style={styles.searchContainer}>
+      <Animated.View entering={FadeInUp.delay(150).duration(500)} style={styles.searchContainer}>
         <TextInput
           mode="outlined"
           placeholder="Ara.."
@@ -86,7 +86,7 @@ export default function HomeScreen() {
           outlineStyle={styles.searchOutline}
           theme={{ roundness: 25, colors: { primary: '#9e9e9e' } }}
         />
-      </View>
+      </Animated.View>
       
       {loading ? (
         <View style={styles.centerContainer}>
