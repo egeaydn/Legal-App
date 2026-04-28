@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, FlatList, Image, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInUp } from 'react-native-reanimated';
 import { fetchKanunKitapciklari } from '../../api/firebase';
 
 const { width } = Dimensions.get('window');
@@ -77,7 +77,7 @@ export default function HomeScreen() {
         <Text style={styles.backgroundWatermarkText}>91</Text>
       </View>
 
-      <Animated.View entering={FadeInDown.delay(150).duration(500)} style={styles.searchContainer}>
+      <Animated.View entering={FadeIn.delay(150).duration(500)} style={styles.searchContainer}>
         <TextInput
           mode="outlined"
           placeholder="Ara.."

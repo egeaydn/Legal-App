@@ -4,7 +4,7 @@ import { Text, IconButton } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Animated, { FadeInDown, FadeInUp, Layout, ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInUp, Layout, ZoomIn } from 'react-native-reanimated';
 
 export interface Madde {
   id: string;
@@ -105,7 +105,7 @@ export default function LibraryScreen() {
 
   return (
     <View style={styles.container}>
-      <Animated.Text entering={FadeInDown.duration(400).delay(100)} style={styles.pageTitle}>
+      <Animated.Text entering={FadeIn.duration(400).delay(100)} style={styles.pageTitle}>
         Kaydettiklerim ({favorites.length})
       </Animated.Text>
       

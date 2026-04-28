@@ -15,7 +15,7 @@ export const fetchGeminiSummary = async (maddeMetni: string) => {
     });
   }
 
-  const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+  const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
   const prompt = `Aşağıdaki kanun maddesini, hukuk fakültesi 1. sınıf öğrencisinin anlayabileceği kadar açık, net ve yalın bir Türkçe ile özetle ve açıkla. Gerekirse günlük hayattan kısa bir örnek ver. Sadece açıklamayı dön.\n\nMadde Metni: "${maddeMetni}"`;
 
   try {
@@ -43,10 +43,14 @@ export const fetchGeminiSummary = async (maddeMetni: string) => {
 
     const data = await response.json();
     
+    if (data.error) {
+        throw new Error(data.error.message || "Bilinmeyen Google API Hatası");
+    }
+
     if (data.candidates && data.candidates[0].content.parts[0].text) {
         return data.candidates[0].content.parts[0].text;
     } else {
-        throw new Error("Beklenmeyen yanıt formatı");
+        throw new Error("Beklenmeyen yanıt formatı: " + JSON.stringify(data));
     }
 
   } catch (error) {
