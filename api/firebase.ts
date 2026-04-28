@@ -13,14 +13,21 @@ const firebaseConfig = {
 
 // Initialize Firebase only if it hasn't been initialized already (helps with Expo Hot Reloading)
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(app);
+const db = getFirestore(app, '(default)');
 
 // Bu fonksiyon Firestore'daki "1" koleksiyonundan ana kitapçıkları çeker
 export const fetchKanunKitapciklari = async () => {
   try {
-    const kitapciklarCol = collection(db, '1'); // Resimde koleksiyon adı '1' olarak görünüyor
-    const snapshot = await getDocs(kitapciklarCol);
+    const kitapciklarCol = collection(db, '1'); 
     
+    console.log("=== FIREBASE DEBUG ===");
+    console.log("Bağlanılan Proje ID:", process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID);
+    console.log("Aranan Koleksiyon:", kitapciklarCol.path);
+
+    const snapshot = await getDocs(kitapciklarCol);
+    console.log("Bulunan Belge Sayısı:", snapshot.size);
+    console.log("======================");
+
     if (snapshot.empty) {
       throw new Error("Veritabanında gösterilecek hiçbir kanun kitapçığı bulunamadı.");
     }
