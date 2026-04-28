@@ -20,6 +20,7 @@ export default function RootLayout() {
       <ThemeProvider value={navTheme}>
         <Stack screenOptions={{ animation: 'slide_from_right' }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="booklet/[id]" options={{ headerShown: false }} />
           <Stack.Screen name="article/[id]" options={{ title: 'Madde Detayı', presentation: 'card' }} />
         </Stack>
         <StatusBar style="auto" />

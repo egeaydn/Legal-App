@@ -47,15 +47,11 @@ export default function HomeScreen() {
             pressed && styles.cardPressed
           ]}
           onPress={() => router.push({
-            pathname: '/article/[id]',
+            pathname: '/booklet/[id]',
             params: {
-              id: item.id, item: JSON.stringify({
-                id: item.id,
-                madde_no: item.Abbreviation || "1",
-                baslik: item.Name,
-                icerik: "Bu kitapçığın ('" + item.Name + "') içeriği ve tüm alt maddeleri çok yakında bir API arayüzünden otomatik çekilerek okumaya hazır hale getirilecektir.",
-                kategori: item.Abbreviation
-              })
+              id: item.id, 
+              name: item.Name,
+              abbreviation: item.Abbreviation
             }
           })}
         >
