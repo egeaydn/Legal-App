@@ -3,7 +3,7 @@ import { View, FlatList, StyleSheet, Image, Pressable, Dimensions, Platform, Act
 import { TextInput, Text, Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { fetchKanunKitapciklari } from '../../api/firebase';
+import { fetchKanunKitapciklari, uploadInitialData } from '../../api/firebase';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width / 2 - 24;
@@ -97,8 +97,8 @@ export default function HomeScreen() {
         <View style={styles.centerContainer}>
           <Text style={styles.errorText}>⚠️ Orada Bir Sorun Oluştu!</Text>
           <Text style={styles.errorSubText}>{errorMsg}</Text>
-          <Button mode="outlined" onPress={loadData} style={{ marginTop: 15 }} textColor="#9d0000" style={styles.errorButton}>
-            TekrarDene
+          <Button mode="outlined" onPress={loadData} style={[styles.errorButton, { marginTop: 15 }]} textColor="#9d0000">
+            Tekrar Dene
           </Button>
         </View>
       ) : (

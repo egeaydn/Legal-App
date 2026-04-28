@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -11,22 +11,20 @@ const firebaseConfig = {
   measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase only if it hasn't been initialized already (helps with Expo Hot Reloading)
+// Initialize Firebase only if it hasn't been initialized already
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app, '(default)');
 
-// Bu fonksiyon Firestore'daki "1" koleksiyonundan ana kitapçıkları çeker
 export const fetchKanunKitapciklari = async () => {
   try {
     const kitapciklarCol = collection(db, '1'); 
     
-    console.log("=== FIREBASE DEBUG ===");
-    console.log("Bağlanılan Proje ID:", process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID);
-    console.log("Aranan Koleksiyon:", kitapciklarCol.path);
+    console.log("=== YENİ FIREBASE SUNUCUSU BAĞLANTISI ===");
+    console.log("Proje ID:", process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID);
 
     const snapshot = await getDocs(kitapciklarCol);
     console.log("Bulunan Belge Sayısı:", snapshot.size);
-    console.log("======================");
+    console.log("=========================================");
 
     if (snapshot.empty) {
       throw new Error("Veritabanında gösterilecek hiçbir kanun kitapçığı bulunamadı.");
@@ -41,7 +39,31 @@ export const fetchKanunKitapciklari = async () => {
     return kitapcikList;
   } catch(error) {
     console.error("Firebase bağlantı hatası:", error);
-    // Hata fırlatarak arayüzde (UI) "Bir sorun oluştu" hata mesajını tetikliyoruz (Array kullanmıyoruz)
     throw new Error("Bir sorun oluştu. Bulut sunucudan kanun listesi getirilemedi."); 
+  }
+};
+
+// Sizin tek tek uğraşmamanız için tek tıkla verileri basacak sihirli fonksiyon :)
+export const uploadInitialData = async () => {
+  const defaultKanunlar = [
+    { Name: 'Türk Ceza Kanunu', Abbreviation: 'TCK' },
+    { Name: 'Türk Medeni Kanunu', Abbreviation: 'TMK' },
+    { Name: 'Türk Ticaret Kanunu', Abbreviation: 'TTK' },
+    { Name: 'Türk Borçlar Kanunu', Abbreviation: 'TBK' },
+    { Name: 'Ceza Muhakemesi Kanunu', Abbreviation: 'CMK' },
+    { Name: 'Türkiye Cumhuriyeti Anayasası', Abbreviation: 'AY' },
+    { Name: 'İcra ve İflas Kanunu', Abbreviation: 'İİK' },
+    { Name: 'İdari Yargılama Usulü Kanunu', Abbreviation: 'İYUK' },
+  ];
+
+  try {
+    const kitapciklarCol = collection(db, '1');
+    for (const kanun of defaultKanunlar) {
+      await addDoc(kitapciklarCol, kanun);
+    }
+    console.log("Tüm örnek kanunlar başarıyla yüklendi!");
+  } catch (error) {
+    console.error("Örnek veri yüklenirken hata:", error);
+    throw error;
   }
 };
