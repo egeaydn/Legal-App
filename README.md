@@ -1,50 +1,157 @@
-# Welcome to your Expo app 👋
+<div align="center">
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<img src="./assets/images/preview.png" alt="App Preview" width="100%" />
 
-## Get started
+<br/>
 
-1. Install dependencies
+# ⚖️ Kanun — Complex Laws, Simple Insights
 
-   ```bash
-   npm install
-   ```
+**Türk hukukunu cebinize sığdırın. Yapay zeka destekli madde açıklamaları ile karmaşık kanunları kolayca anlayın.**
 
-2. Start the app
+<br/>
 
-   ```bash
-   npx expo start
-   ```
+![Expo](https://img.shields.io/badge/Expo-000020?style=for-the-badge&logo=expo&logoColor=white)
+![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Gemini AI](https://img.shields.io/badge/Gemini_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 
-In the output, you'll find options to open the app in a
+</div>
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📱 Ekran Görüntüleri
 
-## Get a fresh project
+Uygulamanın dört temel ekranı — kanun listesi, kitapçık görünümü, yapay zeka açıklamaları ve kişisel kütüphane — kesintisiz, akıcı bir deneyim sunar.
 
-When you're ready, run:
+---
 
-```bash
-npm run reset-project
+## ✨ Özellikler
+
+| Özellik                      | Açıklama                                                                          |
+| ---------------------------- | --------------------------------------------------------------------------------- |
+| 📚 **Kanun Kütüphanesi**     | Türkiye'nin temel kanunlarını (TTK, TMK, TCK, CMK…) arayın ve keşfedin            |
+| 📖 **Kitapçık Görünümü**     | Seçtiğiniz kanunun maddelerini sıralı ve okunabilir biçimde görüntüleyin          |
+| 🤖 **Yapay Zeka Açıklaması** | Google Gemini ile karmaşık maddeleri hukuk fakültesi 1. sınıf seviyesinde anlayın |
+| 🔖 **Kişisel Kütüphane**     | Sık başvurduğunuz maddeleri kaydedin, kişisel ders notları ekleyin                |
+| 🔍 **Akıllı Arama**          | Kanun adı veya kısaltmasıyla (TTK, TCK…) anında filtreleyin                       |
+| ✨ **Akıcı Animasyonlar**    | React Native Reanimated ile smooth geçişler ve dokunuş geri bildirimleri          |
+
+---
+
+## 🛠️ Teknoloji Yığını
+
+```
+📦 Expo SDK 54          — Cross-platform mobil uygulama çerçevesi
+⚛️  React Native 0.81   — iOS & Android UI
+🔥 Firebase Firestore   — Gerçek zamanlı bulut veritabanı
+🤖 Google Gemini AI     — Yapay zeka destekli madde açıklamaları
+🎨 React Native Paper   — Material Design UI bileşenleri
+🎬 Reanimated 4         — Yüksek performanslı animasyonlar
+💾 AsyncStorage         — Yerel yer imi ve not depolama
+🗂️  Expo Router         — Dosya tabanlı sayfa yönlendirme
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 🚀 Başlarken
 
-To learn more about developing your project with Expo, look at the following resources:
+### Gereksinimler
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [Node.js](https://nodejs.org/) (v18+)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+- iOS Simulator veya Android Emulator (ya da fiziksel cihaz)
 
-## Join the community
+### Kurulum
 
-Join our community of developers creating universal apps.
+**1. Depoyu klonlayın**
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+git clone https://github.com/kullanici-adi/kanun-app.git
+cd kanun-app
+```
+
+**2. Bağımlılıkları yükleyin**
+
+```bash
+npm install
+```
+
+**3. Ortam değişkenlerini ayarlayın**
+
+Proje kök dizininde bir `.env` dosyası oluşturun:
+
+```env
+EXPO_PUBLIC_FIREBASE_API_KEY=your_api_key
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+EXPO_PUBLIC_FIREBASE_APP_ID=your_app_id
+EXPO_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
+```
+
+**4. Uygulamayı başlatın**
+
+```bash
+npx expo start
+```
+
+Çıktıda aşağıdaki seçenekleri göreceksiniz:
+
+- **`i`** → iOS Simulator
+- **`a`** → Android Emulator
+- **`w`** → Web tarayıcısı
+- **QR Kod** → Expo Go uygulamasıyla fiziksel cihaz
+
+---
+
+## 📁 Proje Yapısı
+
+```
+kanun-app/
+├── app/
+│   ├── (tabs)/
+│   │   ├── index.tsx        # Ana ekran — kanun listesi & arama
+│   │   └── library.tsx      # Kütüphane — kaydedilen maddeler
+│   ├── booklet/
+│   │   └── [id].tsx         # Kanun kitapçığı — madde listesi
+│   ├── article/
+│   │   └── [id].tsx         # Madde detayı & AI açıklaması
+│   ├── modal.tsx            # Madde detay modalı
+│   └── _layout.tsx          # Kök layout
+├── api/
+│   ├── firebase.ts          # Firestore bağlantısı & veri çekme
+│   └── gemini.ts            # Google Gemini AI entegrasyonu
+├── components/              # Yeniden kullanılabilir UI bileşenleri
+├── constants/
+│   └── theme.ts             # Renk paleti & tema sabitleri
+└── assets/
+    └── images/              # Uygulama ikonları & görseller
+```
+
+---
+
+## 🎨 Tasarım Dili
+
+- **Ana renk:** `#9d0000` — Koyu kırmızı (Türk hukuku & resmiyet)
+- **Arka plan:** `#E8EDF2` — Soft mavi-gri
+- **Kart zemin:** `#FAF9F6` — Kırık beyaz
+- **Yazı tipi:** Georgia / Serif (iOS & Android uyumlu)
+- **Köşe yarıçapı:** 20px — Modern, yuvarlak kartlar
+
+---
+
+## 📄 Lisans
+
+Bu proje MIT Lisansı kapsamında lisanslanmıştır.
+
+---
+
+<div align="center">
+
+**made with ❤️ by [Ege Aydın](https://github.com/egeaydin)**
+
+_"Hukuk herkese ait, anlamak ise artık kolay."_
+
+</div>
