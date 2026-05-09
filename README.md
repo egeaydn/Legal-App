@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./assets/images/preview.png" alt="App Preview" width="100%" />
+<img src="assets/images/ProjectOverview.png" alt="App Preview" width="100%" />
 
 <br/>
 
