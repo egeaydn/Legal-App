@@ -82,7 +82,7 @@ export default function HomeScreen() {
           right={<TextInput.Icon icon="magnify" />}
           style={styles.searchBar}
           outlineStyle={styles.searchOutline}
-          theme={{ roundness: 25, colors: { primary: '#9e9e9e' } }}
+          theme={{ roundness: 20, colors: { primary: '#9e9e9e' } }}
         />
       </Animated.View>
 
